@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const path = require('path');
-const webpack = require('gulp-webpack');
+const webpack = require('webpack-stream');
 const wp = require("webpack");
 const rename = require('gulp-rename'); //更改名字
 const uglify = require('gulp-uglify'); //js代码压缩
@@ -29,6 +29,6 @@ gulp.task('default', function() {
 			module: modules
 		}))
 		// .pipe(uglify())//生产的时候再启用压缩
-		.pipe(gulp.dest('/dist/'))
+		.pipe(gulp.dest('dest/'))
 		.pipe(notify("<%= file.relative %> 成功生成!"));
 });
