@@ -44,12 +44,11 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
+	'use strict';
 
 	var Air = __webpack_require__(1);
 
-	module.export = Air;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)(module)))
+	module.exports = Air;
 
 /***/ }),
 /* 1 */
@@ -73,30 +72,48 @@
 
 	var Air = function () {
 		/** init template and options */
-		function Air(tpl, options) {
+		function Air(tpl, data) {
+			var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 			(0, _classCallCheck3.default)(this, Air);
 
 			this.tpl = tpl;
+			this.data = data;
+
 			this.options = (0, _assign2.default)({
-				data: {},
 				type: '{{}}',
 				debug: false
 			}, options);
 
-			/** type_left is '{{' type_right is '}}' */
-			var type_left = this.options.type.slice(0, this.options.type.length / 2);
-			var type_right = this.options.type.slice(this.options.type.length / 2, this.options.type.length);
+			this.initReg();
 
-			this.type_re = new RegExp(type_left + '([^' + type_right + ']+)?' + type_right, 'g');
-
-			this.result = this.run(); // start run and output result;
+			this.run(); // start run and output result;
 		}
 
-		(0, _createClass3.default)(Air, [{
-			key: 'render',
+		/** 根据参数初始化正则表达式 */
 
+
+		(0, _createClass3.default)(Air, [{
+			key: 'initReg',
+			value: function initReg() {
+				/** type_left is '{{' type_right is '}}' */
+				var type_left = this.options.type.slice(0, this.options.type.length / 2);
+				var type_right = this.options.type.slice(this.options.type.length / 2, this.options.type.length);
+
+				this.type_re = new RegExp(type_left + '([^' + type_right + ']+)?' + type_right, 'g');
+			}
+
+			/** 是否有所含表达式 */
+
+		}, {
+			key: 'isHaveType',
+			value: function isHaveType() {
+				return this.type_re.test(this.tpl);
+			}
 
 			/** render a element by id or class */
+
+		}, {
+			key: 'render',
 			value: function render(el) {
 				var type = el.slice(0, 1);
 				switch (type) {
@@ -116,19 +133,21 @@
 		}, {
 			key: 'run',
 			value: function run() {
+				if (!this.isHaveType()) {
+					this.result = this.tpl;
+					return;
+				}
+
 				var match = null;
 				while (match = this.type_re.exec(this.tpl)) {
 					console.log(match);
 				}
 			}
-		}, {
-			key: 'result',
-			get: function get() {
-				return this.result;
-			}
 		}]);
 		return Air;
 	}();
+
+	module.exports = Air;
 
 /***/ }),
 /* 2 */
@@ -704,22 +723,6 @@
 	var $export = __webpack_require__(5);
 	// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
 	$export($export.S + $export.F * !__webpack_require__(15), 'Object', {defineProperty: __webpack_require__(11).f});
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
 
 /***/ })
 /******/ ]);
